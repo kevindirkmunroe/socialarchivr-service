@@ -30,7 +30,8 @@ public class ArchiveLog {
     @Column(name = "social_media_account", nullable = false)
     private String socialMediaAccount;
 
-    // Constructors
+
+	// Constructors
     public ArchiveLog() {
         this.archiveDateStart = LocalDateTime.now();
     }
@@ -83,5 +84,13 @@ public class ArchiveLog {
     public void setArchiveTrigger(String archiveTriggerType) {
         this.archiveTriggerType = archiveTriggerType;
     }
+    
+    public String getSocialMediaAccount() {
+		return socialMediaAccount;
+	}
+
+	public void setSocialMediaAccount(String socialMediaAccount) {
+		this.socialMediaAccount = socialMediaAccount;
+	}
 }
 

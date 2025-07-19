@@ -1,9 +1,7 @@
 package com.bronzegiant.socialarchivr.log;
 
-import com.bronzegiant.socialarchivr.user.UserRepository;
 import com.bronzegiant.socialarchivr.archive.Archive;
 import com.bronzegiant.socialarchivr.archive.ArchiveRepository;
-import com.bronzegiant.socialarchivr.user.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -31,6 +31,9 @@ public class Post {
     
     @Column(nullable = false)
     private String socialMediaSource;
+    
+    @Column(nullable = false)
+    private String socialMediaId;
 
 
 	// Constructors
@@ -85,6 +88,14 @@ public class Post {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public String getSocialMediaId() {
+		return socialMediaId;
+	}
+
+	public void setSocialMediaId(String socialMediaId) {
+		this.socialMediaId = socialMediaId;
 	}
 }
 
