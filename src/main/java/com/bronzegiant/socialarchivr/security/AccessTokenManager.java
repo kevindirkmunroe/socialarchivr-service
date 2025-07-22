@@ -16,6 +16,7 @@ public class AccessTokenManager {
 	        // login success
 	    	User user = userOpt.get();
 			
+	    	
 			SecureRandom secureRandom = new SecureRandom();
 			byte[] randomBytes = new byte[24];
 			secureRandom.nextBytes(randomBytes);

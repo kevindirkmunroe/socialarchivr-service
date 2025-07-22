@@ -58,11 +58,11 @@ public class User {
     }
     
     public String getLastname() {
-        return firstname;
+        return lastname;
     }
 
     public void setLastname(String name) {
-        this.firstname = name;
+        this.lastname = name;
     }
 
     public String getPassword() {

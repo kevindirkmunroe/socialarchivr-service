@@ -27,4 +27,8 @@ public class AccessToken {
 	public String getUserFullName() {
 		return userFullName;
 	}
+
+	public Long getUserId() {
+		return userId;
+	}
 }
