@@ -42,7 +42,8 @@ public class ArchiveLogController {
     	
         ArchiveLog archiveLog = new ArchiveLog(target, 
         		request.getArchiveTriggerType(),
-        		request.getSocialMediaAccount());
+        		request.getSocialMediaAccount(),
+        		request.getSocialMediaUsername());
         archiveLogRepository.save(archiveLog);
 
         return ResponseEntity.ok(archiveLog);
@@ -77,6 +78,7 @@ public class ArchiveLogController {
     	private String archiveName;
     	private String archiveTriggerType;
     	private String socialMediaAccount;
+    	private String socialMediaUsername;
 
         // Getters and Setters
         public String getArchiveName() {
@@ -96,6 +98,12 @@ public class ArchiveLogController {
 		}
 		public void setSocialMediaAccount(String socialMediaAccount) {
 			this.socialMediaAccount = socialMediaAccount;
+		}
+		public String getSocialMediaUsername() {
+			return socialMediaUsername;
+		}
+		public void setSocialMediaUsername(String socialMediaUsername) {
+			this.socialMediaUsername = socialMediaUsername;
 		}
     }
 }

@@ -48,12 +48,18 @@ public class ArchiveController {
     public List<Post> getArchivePosts(@PathVariable Long id) {
         return postRepository.findByArchiveId(id);
     }
+    
+    
+    @GetMapping("{id}/history")
+    public ResponseEntity<List<ArchiveLog>> getArchiveHistoryByPlatform(@PathVariable Long id) {
+        return ResponseEntity.ok(archiveLogRepository.findLastLogPerPlatform(id));
+    }
 
 
     @GetMapping("/user/{userId}")
     public List<Archive> getArchivesByUserId(@PathVariable Long userId) {
         return archiveRepository.findByUserId(userId);
-    }
+    }    
 
     @PostMapping
     public Archive createArchive(@RequestBody Archive archive) {

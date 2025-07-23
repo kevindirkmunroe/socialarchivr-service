@@ -29,6 +29,9 @@ public class ArchiveLog {
     
     @Column(name = "social_media_account", nullable = false)
     private String socialMediaAccount;
+    
+    @Column(name = "social_media_username", nullable = false)
+    private String socialMediaUsername;
 
 
 	// Constructors
@@ -36,11 +39,12 @@ public class ArchiveLog {
         this.archiveDateStart = LocalDateTime.now();
     }
 
-    public ArchiveLog(Archive archive, String archiveTriggerType, String socialMediaAccount) {
+    public ArchiveLog(Archive archive, String archiveTriggerType, String socialMediaAccount, String socialMediaUsername) {
         this.archive = archive;
         this.archiveTriggerType = archiveTriggerType;
         this.archiveDateStart = LocalDateTime.now();
         this.socialMediaAccount = socialMediaAccount;
+        this.socialMediaUsername = socialMediaUsername;
     }
 
     // Getters and Setters
@@ -91,6 +95,14 @@ public class ArchiveLog {
 
 	public void setSocialMediaAccount(String socialMediaAccount) {
 		this.socialMediaAccount = socialMediaAccount;
+	}
+	
+    public String getSocialMediaUsername() {
+		return socialMediaUsername;
+	}
+
+	public void setSocialMediaUsername(String socialMediaUsername) {
+		this.socialMediaUsername = socialMediaUsername;
 	}
 }
 
