@@ -2,6 +2,8 @@ package com.bronzegiant.socialarchivr.log;
 
 import com.bronzegiant.socialarchivr.archive.Archive;
 import com.bronzegiant.socialarchivr.archive.ArchiveRepository;
+import com.bronzegiant.socialarchivr.socialaccount.SocialMediaPlatform;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +44,7 @@ public class ArchiveLogController {
     	
         ArchiveLog archiveLog = new ArchiveLog(target, 
         		request.getArchiveTriggerType(),
-        		request.getSocialMediaAccount(),
+        		request.getSocialMediaPlatform(),
         		request.getSocialMediaUsername());
         archiveLogRepository.save(archiveLog);
 
@@ -77,7 +79,7 @@ public class ArchiveLogController {
     public static class ArchiveLogRequest {
     	private String archiveName;
     	private String archiveTriggerType;
-    	private String socialMediaAccount;
+    	private SocialMediaPlatform socialMediaPlatform;
     	private String socialMediaUsername;
 
         // Getters and Setters
@@ -93,11 +95,11 @@ public class ArchiveLogController {
 		public void setArchiveTriggerType(String archiveTriggerType) {
 			this.archiveTriggerType = archiveTriggerType;
 		}
-		public String getSocialMediaAccount() {
-			return socialMediaAccount;
+		public SocialMediaPlatform getSocialMediaPlatform() {
+			return socialMediaPlatform;
 		}
-		public void setSocialMediaAccount(String socialMediaAccount) {
-			this.socialMediaAccount = socialMediaAccount;
+		public void setSocialMediaAccount(SocialMediaPlatform socialMediaPlatform) {
+			this.socialMediaPlatform = socialMediaPlatform;
 		}
 		public String getSocialMediaUsername() {
 			return socialMediaUsername;

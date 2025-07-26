@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 import com.bronzegiant.socialarchivr.archive.Archive;
+import com.bronzegiant.socialarchivr.socialaccount.SocialMediaPlatform;
 
 
 @Entity
@@ -27,8 +28,9 @@ public class ArchiveLog {
     @Column(name = "archive_trigger_type", nullable = false)
     private String archiveTriggerType;
     
-    @Column(name = "social_media_account", nullable = false)
-    private String socialMediaAccount;
+    @Column(name = "social_media_platform", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SocialMediaPlatform socialMediaPlatform;
     
     @Column(name = "social_media_username", nullable = false)
     private String socialMediaUsername;
@@ -39,11 +41,11 @@ public class ArchiveLog {
         this.archiveDateStart = LocalDateTime.now();
     }
 
-    public ArchiveLog(Archive archive, String archiveTriggerType, String socialMediaAccount, String socialMediaUsername) {
+    public ArchiveLog(Archive archive, String archiveTriggerType, SocialMediaPlatform socialMediaPlatform, String socialMediaUsername) {
         this.archive = archive;
         this.archiveTriggerType = archiveTriggerType;
         this.archiveDateStart = LocalDateTime.now();
-        this.socialMediaAccount = socialMediaAccount;
+        this.socialMediaPlatform = socialMediaPlatform;
         this.socialMediaUsername = socialMediaUsername;
     }
 
@@ -89,12 +91,12 @@ public class ArchiveLog {
         this.archiveTriggerType = archiveTriggerType;
     }
     
-    public String getSocialMediaAccount() {
-		return socialMediaAccount;
+    public SocialMediaPlatform getSocialMediaPlatform() {
+		return socialMediaPlatform;
 	}
 
-	public void setSocialMediaAccount(String socialMediaAccount) {
-		this.socialMediaAccount = socialMediaAccount;
+	public void setSocialMediaPlatform(SocialMediaPlatform socialMediaPlatform) {
+		this.socialMediaPlatform = socialMediaPlatform;
 	}
 	
     public String getSocialMediaUsername() {
