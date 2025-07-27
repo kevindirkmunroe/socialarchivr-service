@@ -17,7 +17,7 @@ public class Post {
     @Column(nullable = false)
     private Long archiveId;
 
-    @Column(nullable = false, columnDefinition= "TEXT")
+    @Column(nullable = false)
     private String title;
 
     @Column(name = "created_at", nullable = false)
@@ -26,22 +26,23 @@ public class Post {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String mongoId;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String socialMediaSource;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String socialMediaId;
 
 
 	// Constructors
     public Post() {}
 
-    public Post(Long userId, String name) {
+    public Post(Long userId, String title, Long archiveId) {
         this.userId = userId;
-        this.title = name;
+        this.title = title;
+        this.archiveId = archiveId;
         this.createdAt = LocalDateTime.now();
     }
     
