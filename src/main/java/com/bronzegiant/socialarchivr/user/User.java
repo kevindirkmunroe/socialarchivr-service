@@ -32,7 +32,7 @@ public class User {
     // Constructors
     public User() {}
 
-    public User(String firstname, String lastname, String password, String email) {
+    public User(String firstname, String lastname, String email, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
@@ -87,6 +87,10 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+    
+    public String toString() {
+    	return "Email: " + this.email + ",pwd: " + this.password;
     }
 }
 

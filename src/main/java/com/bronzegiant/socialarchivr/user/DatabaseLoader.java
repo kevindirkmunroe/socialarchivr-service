@@ -2,6 +2,7 @@ package com.bronzegiant.socialarchivr.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,37 +36,58 @@ public class DatabaseLoader {
 		
 		return args -> {
 
-			User mainTestUser = new User("Kevin", "Munroe", "kevin.munroe@gmail.com", "asdf");
-			// Users
-			try {
-			    mainTestUser = repository.save(mainTestUser);
-			    log.info("Preloading " + mainTestUser);
-			} catch (DataIntegrityViolationException e) {
-			    log.error("Could not save user: " + e.getMessage());
-			}			
+			User mainTestUser = null;
+			Optional<User> test = repository.findByEmailAndPassword("kevin.munroe@gmail.com", "asdf");
+			if(test.isPresent()) {
+				mainTestUser = test.get();
+			}else {
+				User newUser = new User("Kevin", "Munroe", "kevin.munroe@gmail.com", "asdf");
+				// Users
+				try {
+				    mainTestUser = repository.saveAndFlush(newUser);
+				    log.info("Preloading " + mainTestUser);
+				} catch (DataIntegrityViolationException e) {
+				    log.error("Could not save user: " + e.getMessage());
+				}			
+			}	
 			
-			try {
-			    User savedUser = repository.save(
-			        new User("Frodo", "Baggins", "frodo@lotr.org", "$tr0ngPassw0rd2")
-			    );
-			    log.info("Preloading " + savedUser);
-			} catch (DataIntegrityViolationException e) {
-			    log.error("Could not save user: " + e.getMessage());
-			}		
+			if(mainTestUser == null) {
+				throw new Exception("Main Test User could not be initiazed.");
+			}
+			
+			Optional<User> test2 = repository.findByEmailAndPassword("frodo@lotr.org", "$tr0ngPassw0rd2");
+			if(!test2.isPresent()) {
+				try {
+				    User savedUser = repository.saveAndFlush(
+				        new User("Frodo", "Baggins", "frodo@lotr.org", "$tr0ngPassw0rd2")
+				    );
+				    log.info("Preloading " + savedUser);
+				} catch (DataIntegrityViolationException e) {
+				    log.error("Could not save user: " + e.getMessage());
+				}		
+			}
 			
 			// Archives
-			Archive mainTestArchive = new Archive(mainTestUser.getId(), "morpheus");
-		    List<Archive> archives = new ArrayList<Archive>();
-		    archives.add(mainTestArchive);
-		    archives.add(new Archive(mainTestUser.getId(), "trinity"));
-			try {
-			    List<Archive> savedArchives = archiveRepository.saveAll(archives);
-			    log.info("Preloading " + archives);
-			} catch (DataIntegrityViolationException e) {
-			    log.error("Could not to archives: " + e.getMessage());
+			Archive mainTestArchive = archiveRepository.findByName("morpehus");
+			if(mainTestArchive == null) {
+				try {
+					mainTestArchive = archiveRepository.saveAndFlush(new Archive(mainTestUser.getId(), "morpheus"));
+					log.info("Saved main archive id " + mainTestArchive.getId());
+				} catch (DataIntegrityViolationException e) {
+				    log.error("Could not save archive: " + e.getMessage());
+				}				
 			}
-		    
-			
+
+			Archive trinity = archiveRepository.findByName("trinity");
+			if(trinity == null) {
+				try {
+					archiveRepository.saveAndFlush(new Archive(mainTestUser.getId(), "trinity"));
+					log.info("Saved trinity" + mainTestArchive.getId());
+				} catch (DataIntegrityViolationException e) {
+				    log.error("Could not save archive: " + e.getMessage());
+				}				
+			}
+
 			// social_accounts
 		    List<SocialAccount> entitiesToSave = new ArrayList<SocialAccount>();
 		    entitiesToSave.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive.getId(),  "kevindirk", "accessToken1", 10000L));

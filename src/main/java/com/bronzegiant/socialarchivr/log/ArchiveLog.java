@@ -45,6 +45,7 @@ public class ArchiveLog {
         this.archive = archive;
         this.archiveTriggerType = archiveTriggerType;
         this.archiveDateStart = LocalDateTime.now();
+        this.archiveDateCompleted = LocalDateTime.now();
         this.socialMediaPlatform = socialMediaPlatform;
         this.socialMediaUsername = socialMediaUsername;
     }

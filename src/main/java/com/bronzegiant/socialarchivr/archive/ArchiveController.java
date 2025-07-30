@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.bronzegiant.socialarchivr.log.ArchiveLog;
+import com.bronzegiant.socialarchivr.log.ArchiveLogHistoryRepository;
 import com.bronzegiant.socialarchivr.log.ArchiveLogRepository;
 import com.bronzegiant.socialarchivr.post.Post;
 import com.bronzegiant.socialarchivr.post.PostRepository;
@@ -18,13 +19,17 @@ public class ArchiveController {
     private final ArchiveRepository archiveRepository;
     private final ArchiveLogRepository archiveLogRepository;
     private final PostRepository postRepository;
+    private final ArchiveLogHistoryRepository archiveLogHistoryRepository;
+
 
     public ArchiveController(ArchiveRepository repository, 
     		ArchiveLogRepository archiveLogRepository,
-    		PostRepository postRepository) {
+    		PostRepository postRepository,
+    		ArchiveLogHistoryRepository archiveLogHistoryRepository) {
         this.archiveRepository = repository;
         this.archiveLogRepository = archiveLogRepository;
 		this.postRepository = postRepository;
+        this.archiveLogHistoryRepository = archiveLogHistoryRepository;
     }
 
     @GetMapping
@@ -52,7 +57,7 @@ public class ArchiveController {
     
     @GetMapping("{id}/history")
     public ResponseEntity<List<ArchiveLog>> getArchiveHistoryByPlatform(@PathVariable Long id) {
-        return ResponseEntity.ok(archiveLogRepository.findLastLogPerPlatform(id));
+        return ResponseEntity.ok(archiveLogHistoryRepository.findLastLogPerPlatform(id));
     }
 
 

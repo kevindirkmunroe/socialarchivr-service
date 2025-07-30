@@ -17,7 +17,9 @@ public class ArchiveLogController {
     private final ArchiveLogRepository archiveLogRepository;
     private final ArchiveRepository archiveRepository;
 
-    public ArchiveLogController(ArchiveLogRepository archiveLogRepository, ArchiveRepository archiveRepository) {
+    public ArchiveLogController(
+    		ArchiveLogRepository archiveLogRepository, 
+    		ArchiveRepository archiveRepository) {
         this.archiveLogRepository = archiveLogRepository;
         this.archiveRepository = archiveRepository;
     }
