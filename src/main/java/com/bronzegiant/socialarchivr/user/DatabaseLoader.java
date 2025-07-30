@@ -121,6 +121,7 @@ public class DatabaseLoader {
 		    List<Post> posts = new ArrayList<Post>();
 		    posts.add(new Post(mainTestUser.getId(), "This is post 1", mainTestArchive.getId()));
 		    posts.add(new Post(mainTestUser.getId(), "This is post 2. Not very exciting.", mainTestArchive.getId()));
+		    posts.add(new Post(mainTestUser.getId(), "This is post 3. What a barn burner this one is.", mainTestArchive.getId()));
 			try {
 			    List<Post> savedPosts = postRepository.saveAll(posts);
 			    log.info("Preloading " + savedPosts);
