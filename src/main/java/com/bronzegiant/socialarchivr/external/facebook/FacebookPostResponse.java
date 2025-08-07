@@ -1,4 +1,4 @@
-package com.bronzegiant.socialarchivr.facebook;
+package com.bronzegiant.socialarchivr.external.facebook;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.bronzegiant.socialarchivr.facebook;
+package com.bronzegiant.socialarchivr.external.facebook;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

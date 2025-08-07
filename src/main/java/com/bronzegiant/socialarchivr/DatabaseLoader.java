@@ -1,4 +1,4 @@
-package com.bronzegiant.socialarchivr.user;
+package com.bronzegiant.socialarchivr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,11 @@ import com.bronzegiant.socialarchivr.post.PostRepository;
 import com.bronzegiant.socialarchivr.socialaccount.SocialAccount;
 import com.bronzegiant.socialarchivr.socialaccount.SocialAccountRepository;
 import com.bronzegiant.socialarchivr.socialaccount.SocialMediaPlatform;
+import com.bronzegiant.socialarchivr.user.User;
+import com.bronzegiant.socialarchivr.user.UserRepository;
 import com.bronzegiant.socialarchivr.archive.ArchiveRepository;
+import com.bronzegiant.socialarchivr.job.ArchiveJob;
+import com.bronzegiant.socialarchivr.job.ArchiveJobRepository;
 
 @Configuration
 public class DatabaseLoader {
@@ -32,6 +36,7 @@ public class DatabaseLoader {
 		SocialAccountRepository saRepository, 
 		ArchiveRepository archiveRepository,
 		ArchiveLogRepository archiveLogRepository,
+		ArchiveJobRepository archiveJobRepository,
 		PostRepository postRepository) {
 		
 		return args -> {
@@ -109,7 +114,7 @@ public class DatabaseLoader {
 		    logs.add(new ArchiveLog(mainTestArchive, "MANUAL", SocialMediaPlatform.INSTAGRAM, "itskevinmunroe"));
 		    logs.add(new ArchiveLog(mainTestArchive, "AUTO", SocialMediaPlatform.FACEBOOK, "kevinthecomedian"));
 		    logs.add(new ArchiveLog(mainTestArchive, "MANUAL", SocialMediaPlatform.FACEBOOK, "kevinthecomedian"));
-		    
+
 		    
 			try {
 			    List<ArchiveLog> savedLogs = archiveLogRepository.saveAll(logs);
@@ -117,6 +122,17 @@ public class DatabaseLoader {
 			} catch (DataIntegrityViolationException e) {
 			    log.error("Could not save to archive_log: " + e.getMessage());
 			}	
+			
+		    
+		    // archive job
+		    List<ArchiveJob> jobs = new ArrayList<ArchiveJob>();
+		    jobs.add(new ArchiveJob("kevindirk", mainTestArchive.getId() ));
+			try {
+			    List<ArchiveJob> savedJobs = archiveJobRepository.saveAll(jobs);
+			    log.info("Preloading " + jobs);
+			} catch (DataIntegrityViolationException e) {
+			    log.error("Could not save to posts: " + e.getMessage());
+			}
 			
 		    List<Post> posts = new ArrayList<Post>();
 		    posts.add(new Post(mainTestUser.getId(), "This is post 1", mainTestArchive.getId()));
