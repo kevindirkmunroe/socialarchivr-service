@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,10 +21,12 @@ import com.bronzegiant.socialarchivr.security.AccessToken;
 import com.bronzegiant.socialarchivr.security.AccessTokenManager;
 import com.bronzegiant.socialarchivr.security.LoginCredentials;
 
+import jakarta.validation.Valid;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
 class UserController {
 
@@ -36,7 +39,7 @@ class UserController {
 
   // Aggregate root
   // tag::get-aggregate-root[]
-  @GetMapping("/users")
+  @GetMapping
   CollectionModel<EntityModel<User>> all() {
 
 	  List<EntityModel<User>> users = repository.findAll().stream()
@@ -49,9 +52,16 @@ class UserController {
   // end::get-aggregate-root[]
   }
 
-  @PostMapping("/users")
-  User newUser(@RequestBody User newUser) {
-    return repository.save(newUser);
+//  @PostMapping("/users")
+//  User newUser(@RequestBody User newUser) {
+//    return repository.save(newUser);
+//  }
+  @PostMapping("/signup")
+  public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
+      // TODO: save user to DB (PostgreSQL or Mongo)
+      // TODO: hash password before saving (e.g. BCryptPasswordEncoder)
+
+      return ResponseEntity.ok("User signed up: " + signupRequest.getEmail());
   }
   
   @PostMapping("/login")
@@ -62,7 +72,7 @@ class UserController {
 
   // Single item
   
-  @GetMapping("/users/{id}")
+  @GetMapping("/{id}")
   EntityModel<User> one(@PathVariable Long id) {
     
     User emp = repository.findById(id)
@@ -73,7 +83,7 @@ class UserController {
     		linkTo(methodOn(UserController.class).all()).withRel("Users"));
   }
 
-  @PutMapping("/users/{id}")
+  @PutMapping("/{id}")
   User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
     
     return repository.findById(id)
@@ -88,7 +98,7 @@ class UserController {
       });
   }
 
-  @DeleteMapping("/users/{id}")
+  @DeleteMapping("{id}")
   void deleteUser(@PathVariable Long id) {
     repository.deleteById(id);
   }
