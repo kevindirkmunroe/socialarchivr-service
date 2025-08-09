@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -52,22 +53,28 @@ class UserController {
   // end::get-aggregate-root[]
   }
 
-//  @PostMapping("/users")
-//  User newUser(@RequestBody User newUser) {
-//    return repository.save(newUser);
-//  }
   @PostMapping("/signup")
-  public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
-      // TODO: save user to DB (PostgreSQL or Mongo)
-      // TODO: hash password before saving (e.g. BCryptPasswordEncoder)
+  public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest sur) {
 
-      return ResponseEntity.ok("User signed up: " + signupRequest.getEmail());
+	  User newUser = new User(sur.getFirstname(), sur.getLastname(), sur.getEmail(), sur.getPassword());
+	  try {
+	      // TODO: hash password before saving (e.g. BCryptPasswordEncoder)
+		  repository.save(newUser);
+		  
+	      return ResponseEntity.ok("User signed up: " + sur.getEmail());
+	  }catch(Error e) {
+		  return ResponseEntity.badRequest().body("Invalid user signup request: " + e.getMessage());
+	  }
+
   }
   
   @PostMapping("/login")
-  AccessToken newUser(@RequestBody LoginCredentials credentials) {
+  ResponseEntity<AccessToken> newUser(@RequestBody LoginCredentials credentials) {
     AccessToken newToken =  AccessTokenManager.createToken(credentials, repository);
-    return newToken;
+    if(newToken == null) {
+    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(newToken);
+    }
+    return ResponseEntity.ok(newToken);
   }
 
   // Single item
