@@ -1,11 +1,14 @@
 
 package com.bronzegiant.socialarchivr.user;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,11 +19,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bronzegiant.socialarchivr.security.AccessToken;
 import com.bronzegiant.socialarchivr.security.AccessTokenManager;
 import com.bronzegiant.socialarchivr.security.LoginCredentials;
+import com.bronzegiant.socialarchivr.user.profileimage.UserProfileImage;
+import com.bronzegiant.socialarchivr.user.profileimage.UserProfileImageService;
 
 import jakarta.validation.Valid;
 
@@ -32,9 +39,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 class UserController {
 
   private final UserRepository repository;
+  private final UserProfileImageService profileImageService;
 
-  UserController(UserRepository repository) {
+  UserController(UserRepository repository, UserProfileImageService upiService) {
     this.repository = repository;
+    this.profileImageService = upiService;
   }
 
 
@@ -76,8 +85,6 @@ class UserController {
     }
     return ResponseEntity.ok(newToken);
   }
-
-  // Single item
   
   @GetMapping("/{id}")
   EntityModel<User> one(@PathVariable Long id) {
@@ -108,5 +115,30 @@ class UserController {
   @DeleteMapping("{id}")
   void deleteUser(@PathVariable Long id) {
     repository.deleteById(id);
+  }
+  
+  @PostMapping("/{id}/profile-image")
+  public ResponseEntity<?> uploadProfileImage(@PathVariable Long id,
+                                              @RequestParam MultipartFile image) {
+      try {
+          profileImageService.uploadProfileImage(id, image);
+          return ResponseEntity.ok("Profile image uploaded successfully");
+      } catch (IllegalArgumentException e) {
+          return ResponseEntity.badRequest().body(e.getMessage());
+      } catch (IOException e) {
+          return ResponseEntity.status(500).body("Failed to read image file");
+      }
+  }
+
+  @GetMapping("/{userId}/profile-image")
+  public ResponseEntity<byte[]> getProfileImage(@PathVariable Long id) {
+	    return profileImageService.getProfileImage(id)
+	            .map((UserProfileImage image) -> 
+	                ResponseEntity.ok()
+	                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+	                    .contentType(MediaType.parseMediaType(image.getContentType()))
+	                    .body(image.getImageData())
+	            )
+	            .orElseGet(() -> ResponseEntity.notFound().build());
   }
 }
