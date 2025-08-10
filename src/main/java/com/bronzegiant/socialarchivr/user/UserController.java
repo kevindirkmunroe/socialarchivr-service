@@ -130,7 +130,7 @@ class UserController {
       }
   }
 
-  @GetMapping("/{userId}/profile-image")
+  @GetMapping("/{id}/profile-image")
   public ResponseEntity<byte[]> getProfileImage(@PathVariable Long id) {
 	    return profileImageService.getProfileImage(id)
 	            .map((UserProfileImage image) -> 

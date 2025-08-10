@@ -1,5 +1,6 @@
 package com.bronzegiant.socialarchivr;
 
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import com.bronzegiant.socialarchivr.archive.Archive;
@@ -21,6 +23,8 @@ import com.bronzegiant.socialarchivr.socialaccount.SocialAccountRepository;
 import com.bronzegiant.socialarchivr.socialaccount.SocialMediaPlatform;
 import com.bronzegiant.socialarchivr.user.User;
 import com.bronzegiant.socialarchivr.user.UserRepository;
+import com.bronzegiant.socialarchivr.user.profileimage.UserProfileImage;
+import com.bronzegiant.socialarchivr.user.profileimage.UserProfileImageRepository;
 import com.bronzegiant.socialarchivr.archive.ArchiveRepository;
 import com.bronzegiant.socialarchivr.job.ArchiveJob;
 import com.bronzegiant.socialarchivr.job.ArchiveJobRepository;
@@ -33,6 +37,7 @@ public class DatabaseLoader {
 	@Bean
 	CommandLineRunner initDatabase(
 		UserRepository repository, 
+		UserProfileImageRepository userProfileImageRepository,
 		SocialAccountRepository saRepository, 
 		ArchiveRepository archiveRepository,
 		ArchiveLogRepository archiveLogRepository,
@@ -57,7 +62,21 @@ public class DatabaseLoader {
 			}	
 			
 			if(mainTestUser == null) {
-				throw new Exception("Main Test User could not be initiazed.");
+				throw new Exception("Main Test User could not be initialized.");
+			}
+			
+			// User Profile Pic
+            ClassPathResource imgFile = new ClassPathResource("static/images/default-profile.jpg");
+            byte[] imageData = Files.readAllBytes(imgFile.getFile().toPath());
+            log.info("imageData size=" + imageData.length);
+			UserProfileImage upi = new UserProfileImage(mainTestUser, imageData, "default-profile.jpg", "image/jpg" );
+            log.info("upi.ImageData size=" + upi.getImageData().length);
+
+			try {
+				UserProfileImage savedUpi = userProfileImageRepository.saveAndFlush(upi);
+			    log.info("Preloading " + savedUpi);
+			}catch(Exception e) {
+				log.error("Could not save profile image: " + e);
 			}
 			
 			Optional<User> test2 = repository.findByEmailAndPassword("frodo@lotr.org", "$tr0ngPassw0rd2");
