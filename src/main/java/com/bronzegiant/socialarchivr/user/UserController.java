@@ -3,6 +3,7 @@ package com.bronzegiant.socialarchivr.user;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.EntityModel;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bronzegiant.socialarchivr.DatabaseLoader;
 import com.bronzegiant.socialarchivr.security.AccessToken;
 import com.bronzegiant.socialarchivr.security.AccessTokenManager;
 import com.bronzegiant.socialarchivr.security.LoginCredentials;
@@ -40,6 +44,9 @@ class UserController {
 
   private final UserRepository repository;
   private final UserProfileImageService profileImageService;
+  
+  private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
 
   UserController(UserRepository repository, UserProfileImageService upiService) {
     this.repository = repository;
@@ -130,15 +137,15 @@ class UserController {
       }
   }
 
-  @GetMapping("/{id}/profile-image")
+  @GetMapping(value = "/{id}/profile-image", produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<byte[]> getProfileImage(@PathVariable Long id) {
-	    return profileImageService.getProfileImage(id)
-	            .map((UserProfileImage image) -> 
-	                ResponseEntity.ok()
-	                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
-	                    .contentType(MediaType.parseMediaType(image.getContentType()))
-	                    .body(image.getImageData())
-	            )
-	            .orElseGet(() -> ResponseEntity.notFound().build());
+	    Optional<UserProfileImage> image = profileImageService.getProfileImage(id);
+	    if(image.isPresent()) {
+	    	return ResponseEntity.ok()
+	    			.contentType(MediaType.IMAGE_JPEG)
+	    			.body(image.get().getImageData());
+	    }else{
+	    	return ResponseEntity.notFound().build();
+	    }
   }
 }
