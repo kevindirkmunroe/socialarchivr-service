@@ -22,6 +22,11 @@ public class SocialAccountController {
     public List<SocialAccount> getAccounts(@PathVariable Long archiveId) {
         return repository.findByArchiveId(archiveId);
     }
+    
+    @GetMapping("/{archiveId}/username/{username}")
+    public SocialAccount getAccountByUsername(@PathVariable Long archiveId, @PathVariable String username) {
+        return repository.findByArchiveIdAndUsername(archiveId, username);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteAccount(@PathVariable Long id) {

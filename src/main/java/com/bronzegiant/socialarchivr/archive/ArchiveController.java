@@ -72,12 +72,10 @@ public class ArchiveController {
         return postRepository.findByArchiveId(id);
     }
     
-    
     @GetMapping("{id}/history")
     public ResponseEntity<List<ArchiveLog>> getArchiveHistoryByPlatform(@PathVariable Long id) {
         return ResponseEntity.ok(archiveLogHistoryRepository.findLastLogPerPlatform(id));
     }
-
 
     @GetMapping("/user/{userId}")
     public List<Archive> getArchivesByUserId(@PathVariable Long userId) {

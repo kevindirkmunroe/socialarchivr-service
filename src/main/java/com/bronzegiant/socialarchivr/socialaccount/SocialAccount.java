@@ -3,6 +3,7 @@ package com.bronzegiant.socialarchivr.socialaccount;
 import java.time.Instant;
 
 import com.bronzegiant.socialarchivr.SocialMediaPlatform;
+import com.bronzegiant.socialarchivr.archive.Archive;
 
 import jakarta.persistence.*;
 
@@ -17,8 +18,9 @@ public class SocialAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "archive_id")
-    private Long archiveId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "archive_id", nullable = false)
+    private Archive archive;
 
     @Enumerated(EnumType.STRING)
     private SocialMediaPlatform platform; // FACEBOOK, INSTAGRAM, etc.
@@ -36,9 +38,9 @@ public class SocialAccount {
     
     public SocialAccount() {}
     
-    public SocialAccount(SocialMediaPlatform platform, Long archiveId, String username, String accessToken, Long expiresIn) {
+    public SocialAccount(SocialMediaPlatform platform, Archive archive, String username, String accessToken, Long expiresIn) {
     	this.platform = platform;
-    	this.archiveId = archiveId;
+    	this.archive = archive;
     	this.username = username;
     	this.accessToken = accessToken;
     	this.tokenExpiresInMs = expiresIn;
@@ -52,12 +54,12 @@ public class SocialAccount {
 		this.id = id;
 	}
 
-	public Long getArchiveId() {
-		return archiveId;
+	public Archive getArchive() {
+		return archive;
 	}
 
-	public void setArchiveId(Long archiveId) {
-		this.archiveId = archiveId;
+	public void setArchive(Archive archive) {
+		this.archive = archive;
 	}
 
 	public SocialMediaPlatform getPlatform() {

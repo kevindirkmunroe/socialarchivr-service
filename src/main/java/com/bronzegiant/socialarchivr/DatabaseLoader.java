@@ -115,9 +115,9 @@ public class DatabaseLoader {
 
 			// social_accounts
 		    List<SocialAccount> accountEntities = new ArrayList<SocialAccount>();
-		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive.getId(),  "kevindirk", "accessToken1", 10000L));
-		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive.getId(),  "kevinthecomedian", "accessToken2", 10000L));
-		    accountEntities.add(new SocialAccount(SocialMediaPlatform.INSTAGRAM, mainTestArchive.getId(),  "itskevinmunroe", "accessToken3", 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive,  "kevindirk", "accessToken1", 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive,  "kevinthecomedian", "accessToken2", 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.INSTAGRAM, mainTestArchive,  "itskevinmunroe", "accessToken3", 10000L));
 		    
 			try {
 			    List<SocialAccount> savedSocialAccounts = saRepository.saveAll(accountEntities);

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SocialAccountRepository extends JpaRepository<SocialAccount, Long> {
     List<SocialAccount> findByArchiveId(Long archiveId);
+    SocialAccount findByArchiveIdAndUsername(Long archiveId, String username);
 }
