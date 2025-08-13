@@ -28,6 +28,7 @@ public class UserProfileImageService {
 
         // Delete existing image if present
         imageRepository.findByUser(user).ifPresent(imageRepository::delete);
+        imageRepository.flush();
 
         // Create new UserProfileImage entity
         UserProfileImage profileImage = new UserProfileImage();

@@ -159,6 +159,9 @@ public class DatabaseLoader {
 		    posts.add(new Post(mainTestUser.getId(), "This is post 1", mainTestArchive.getId()));
 		    posts.add(new Post(mainTestUser.getId(), "This is post 2. Not very exciting.", mainTestArchive.getId()));
 		    posts.add(new Post(mainTestUser.getId(), "This is post 3. What a barn burner this one is.", mainTestArchive.getId()));
+		    posts.add(new Post(mainTestUser.getId(), "This is post 4. Still pretty boring.", mainTestArchive.getId()));
+		    posts.add(new Post(mainTestUser.getId(), "This is post 5. Have you seen my cat?", mainTestArchive.getId()));
+		    posts.add(new Post(mainTestUser.getId(), "This is post 6. Go Niners.", mainTestArchive.getId()));
 			try {
 			    List<Post> savedPosts = postRepository.saveAll(posts);
 			    log.info("Preloading " + savedPosts);

@@ -126,7 +126,7 @@ class UserController {
   
   @PostMapping("/{id}/profile-image")
   public ResponseEntity<?> uploadProfileImage(@PathVariable Long id,
-                                              @RequestParam MultipartFile image) {
+                                              @RequestParam("profileImage") MultipartFile image) {
       try {
           profileImageService.uploadProfileImage(id, image);
           return ResponseEntity.ok("Profile image uploaded successfully");
