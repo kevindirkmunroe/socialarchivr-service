@@ -21,7 +21,6 @@ import com.bronzegiant.socialarchivr.post.Post;
 import com.bronzegiant.socialarchivr.post.PostRepository;
 import com.bronzegiant.socialarchivr.socialaccount.SocialAccount;
 import com.bronzegiant.socialarchivr.socialaccount.SocialAccountRepository;
-import com.bronzegiant.socialarchivr.socialaccount.SocialMediaPlatform;
 import com.bronzegiant.socialarchivr.user.User;
 import com.bronzegiant.socialarchivr.user.UserRepository;
 import com.bronzegiant.socialarchivr.user.profileimage.UserProfileImage;
@@ -115,13 +114,13 @@ public class DatabaseLoader {
 			}
 
 			// social_accounts
-		    List<SocialAccount> entitiesToSave = new ArrayList<SocialAccount>();
-		    entitiesToSave.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive.getId(),  "kevindirk", "accessToken1", 10000L));
-		    entitiesToSave.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive.getId(),  "kevinthecomedian", "accessToken2", 10000L));
-		    entitiesToSave.add(new SocialAccount(SocialMediaPlatform.INSTAGRAM, mainTestArchive.getId(),  "itskevinmunroe", "accessToken3", 10000L));
+		    List<SocialAccount> accountEntities = new ArrayList<SocialAccount>();
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive.getId(),  "kevindirk", "accessToken1", 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive.getId(),  "kevinthecomedian", "accessToken2", 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.INSTAGRAM, mainTestArchive.getId(),  "itskevinmunroe", "accessToken3", 10000L));
 		    
 			try {
-			    List<SocialAccount> savedSocialAccounts = saRepository.saveAll(entitiesToSave);
+			    List<SocialAccount> savedSocialAccounts = saRepository.saveAll(accountEntities);
 			    log.info("Preloading " + savedSocialAccounts);
 			} catch (DataIntegrityViolationException e) {
 			    log.error("Could not save to social_accounts" + e.getMessage());
@@ -156,12 +155,12 @@ public class DatabaseLoader {
 			}
 			
 		    List<Post> posts = new ArrayList<Post>();
-		    posts.add(new Post(mainTestUser.getId(), "This is post 1", mainTestArchive.getId()));
-		    posts.add(new Post(mainTestUser.getId(), "This is post 2. Not very exciting.", mainTestArchive.getId()));
-		    posts.add(new Post(mainTestUser.getId(), "This is post 3. What a barn burner this one is.", mainTestArchive.getId()));
-		    posts.add(new Post(mainTestUser.getId(), "This is post 4. Still pretty boring.", mainTestArchive.getId()));
-		    posts.add(new Post(mainTestUser.getId(), "This is post 5. Have you seen my cat?", mainTestArchive.getId()));
-		    posts.add(new Post(mainTestUser.getId(), "This is post 6. Go Niners.", mainTestArchive.getId()));
+		    posts.add(new Post(mainTestUser, mainTestArchive, accountEntities.get(0), "This is post 1"));
+		    posts.add(new Post(mainTestUser, mainTestArchive, accountEntities.get(1),  "This is post 2. Not very exciting."));
+		    posts.add(new Post(mainTestUser, mainTestArchive, accountEntities.get(0), "This is post 3. What a barn burner this one is."));
+		    posts.add(new Post(mainTestUser, mainTestArchive, accountEntities.get(1),  "This is post 4. Still pretty boring."));
+		    posts.add(new Post(mainTestUser, mainTestArchive, accountEntities.get(2), "This is post 5. Have you seen my cat?"));
+		    posts.add(new Post(mainTestUser, mainTestArchive, accountEntities.get(2), "This is post 6. Go Niners."));
 			try {
 			    List<Post> savedPosts = postRepository.saveAll(posts);
 			    log.info("Preloading " + savedPosts);

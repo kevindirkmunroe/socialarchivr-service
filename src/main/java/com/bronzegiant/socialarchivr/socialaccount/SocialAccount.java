@@ -2,6 +2,8 @@ package com.bronzegiant.socialarchivr.socialaccount;
 
 import java.time.Instant;
 
+import com.bronzegiant.socialarchivr.SocialMediaPlatform;
+
 import jakarta.persistence.*;
 
 @Entity

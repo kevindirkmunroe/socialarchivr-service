@@ -3,6 +3,10 @@ package com.bronzegiant.socialarchivr.post;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.bronzegiant.socialarchivr.archive.Archive;
+import com.bronzegiant.socialarchivr.socialaccount.SocialAccount;
+import com.bronzegiant.socialarchivr.user.User;
+
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -11,11 +15,17 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     
-    @Column(nullable = false)
-    private Long archiveId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "archive_id", nullable = false)
+    private Archive archive;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "social_account_id", nullable = false)
+    private SocialAccount socialAccount;
 
     @Column(nullable = false)
     private String title;
@@ -28,21 +38,16 @@ public class Post {
     
     @Column(nullable = true)
     private String mongoId;
-    
-    @Column(nullable = true)
-    private String socialMediaSource;
-    
-    @Column(nullable = true)
-    private String socialMediaId;
 
 
 	// Constructors
     public Post() {}
 
-    public Post(Long userId, String title, Long archiveId) {
-        this.userId = userId;
+    public Post(User user, Archive archive, SocialAccount socialAccount, String title) {
+        this.user = user;
+        this.archive = archive;
+        this.socialAccount = socialAccount;
         this.title = title;
-        this.archiveId = archiveId;
         this.createdAt = LocalDateTime.now();
     }
     
@@ -67,17 +72,20 @@ public class Post {
 
 
     // Getters and setters
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public User getUser() { return user; }
     
-    public Long getArchiveId() { return archiveId; }
-    public void setArchiveId(Long archiveId) { this.archiveId = archiveId; }
+    public Archive getArchive() { return archive; }
+    
+    public SocialAccount getSocialAccount() {
+    	return socialAccount;
+    }
 
-    public String getName() { return title; }
-    public void setName(String name) { this.title = name; }
+    public String getTitle() { return title; }
+    public void setTitle(String t) { this.title = t; }
 
     public LocalDateTime getCreatedDate() { return createdAt; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdAt = createdDate; }
@@ -89,14 +97,6 @@ public class Post {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
-	}
-
-	public String getSocialMediaId() {
-		return socialMediaId;
-	}
-
-	public void setSocialMediaId(String socialMediaId) {
-		this.socialMediaId = socialMediaId;
 	}
 }
 

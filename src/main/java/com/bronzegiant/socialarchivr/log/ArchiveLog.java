@@ -3,8 +3,8 @@ package com.bronzegiant.socialarchivr.log;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.bronzegiant.socialarchivr.SocialMediaPlatform;
 import com.bronzegiant.socialarchivr.archive.Archive;
-import com.bronzegiant.socialarchivr.socialaccount.SocialMediaPlatform;
 
 
 @Entity

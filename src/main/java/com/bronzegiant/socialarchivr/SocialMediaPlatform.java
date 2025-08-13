@@ -1,4 +1,4 @@
-package com.bronzegiant.socialarchivr.socialaccount;
+package com.bronzegiant.socialarchivr;
 
 public enum SocialMediaPlatform {
     FACEBOOK,
