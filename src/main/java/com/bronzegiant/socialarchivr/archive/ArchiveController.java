@@ -6,13 +6,16 @@ import org.springframework.web.bind.annotation.*;
 import com.bronzegiant.socialarchivr.job.ArchiveJob;
 import com.bronzegiant.socialarchivr.job.ArchiveJobRepository;
 import com.bronzegiant.socialarchivr.job.ArchiveJobRequest;
-import com.bronzegiant.socialarchivr.job.ArchiveJobService;
+import com.bronzegiant.socialarchivr.SocialMediaPlatform;
+import com.bronzegiant.socialarchivr.external.facebook.FacebookArchiveJobService;
+import com.bronzegiant.socialarchivr.job.AbstractArchiveJobService;
 import com.bronzegiant.socialarchivr.log.ArchiveLog;
 import com.bronzegiant.socialarchivr.log.ArchiveLogHistoryRepository;
 import com.bronzegiant.socialarchivr.log.ArchiveLogRepository;
 import com.bronzegiant.socialarchivr.post.Post;
 import com.bronzegiant.socialarchivr.post.PostRepository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,24 +33,23 @@ public class ArchiveController {
     private final ArchiveLogHistoryRepository archiveLogHistoryRepository;
     
     private final ArchiveJobRepository archiveJobRepository;
-    private final ArchiveJobService archiveJobService;
+    private final Map<SocialMediaPlatform, AbstractArchiveJobService> archiveJobServices;
     
     private static final Logger LOGGER = Logger.getLogger(ArchiveController.class.getName());
-
-
 
     public ArchiveController(ArchiveRepository repository, 
     		ArchiveLogRepository archiveLogRepository,
     		PostRepository postRepository,
     		ArchiveLogHistoryRepository archiveLogHistoryRepository, 
-    		ArchiveJobRepository archiveJobRepository,
-    		ArchiveJobService archiveJobService) {
+    		ArchiveJobRepository archiveJobRepository) {
         this.archiveRepository = repository;
         this.archiveLogRepository = archiveLogRepository;
 		this.postRepository = postRepository;
         this.archiveLogHistoryRepository = archiveLogHistoryRepository;
         this.archiveJobRepository = archiveJobRepository;
-        this.archiveJobService = archiveJobService;
+        
+        archiveJobServices = new HashMap<SocialMediaPlatform, AbstractArchiveJobService>();
+        archiveJobServices.put(SocialMediaPlatform.FACEBOOK, new FacebookArchiveJobService(archiveJobRepository));
     }
 
     @GetMapping
@@ -109,18 +111,19 @@ public class ArchiveController {
     }
     
     @PostMapping("/job")
-    public ResponseEntity<?> startArchive(@RequestBody ArchiveJobRequest request) {
-        ArchiveJob job = new ArchiveJob(request.getUsername(), request.getArchiveId());
-
+    public ResponseEntity<?> startArchiveJob(@RequestBody ArchiveJobRequest request) {
+        ArchiveJob job = new ArchiveJob(request.getArchiveId(), request.getUsername(), request.getPlatform());
+        
+        // before running job cycle, persist job marked as PENDING...
         job = archiveJobRepository.save(job);
 
-        archiveJobService.runArchiveJob(job);
+        archiveJobServices.get(request.getPlatform()).runArchiveJob(job);
 
         return ResponseEntity.accepted().body(Map.of("jobId", job.getId()));
     }
 
     @GetMapping("/job/{jobId}")
-    public ResponseEntity<?> getJobStatus(@PathVariable Long jobId) {
+    public ResponseEntity<?> getArchiveJobStatus(@PathVariable Long jobId) {
         LOGGER.log(Level.INFO, "Getting job status for jobId " + jobId);
 
         

@@ -23,8 +23,8 @@ public class SocialAccountController {
         return repository.findByArchiveId(archiveId);
     }
     
-    @GetMapping("/{archiveId}/username/{username}")
-    public SocialAccount getAccountByUsername(@PathVariable Long archiveId, @PathVariable String username) {
+    @GetMapping("/{archiveId}/by-username")
+    public SocialAccount getAccountByUsername(@PathVariable Long archiveId, @RequestParam String username) {
         return repository.findByArchiveIdAndUsername(archiveId, username);
     }
 

@@ -146,7 +146,7 @@ public class DatabaseLoader {
 		    
 		    // archive job
 		    List<ArchiveJob> jobs = new ArrayList<ArchiveJob>();
-		    jobs.add(new ArchiveJob("kevindirk", mainTestArchive.getId() ));
+		    jobs.add(new ArchiveJob( mainTestArchive.getId(), "kevindirk", SocialMediaPlatform.FACEBOOK ));
 			try {
 			    List<ArchiveJob> savedJobs = archiveJobRepository.saveAll(jobs);
 			    log.info("Preloading " + jobs);

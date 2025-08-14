@@ -1,7 +1,11 @@
 package com.bronzegiant.socialarchivr.external.facebook;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Service
@@ -10,6 +14,8 @@ public class FacebookClient {
 	
 	private String serviceVersion ;
 	private String baseUrl;
+	private String appId;
+	private String appSecret;
 
     private final WebClient webClient;
 
@@ -31,6 +37,21 @@ public class FacebookClient {
                 .bodyToMono(FacebookPostResponse.class)
                 .block(); // Synchronous call
     }
+    
+    public boolean isFacebookTokenValid(String userAccessToken) {
+        String appAccessToken = appId + "|" + appSecret;
+        String url = String.format(
+            "https://graph.facebook.com/debug_token?input_token=%s&access_token=%s",
+            userAccessToken, appAccessToken
+        );
+
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+
+        Map<String, Object> data = (Map<String, Object>) response.get("data");
+        return data != null && Boolean.TRUE.equals(data.get("is_valid"));
+    }
+
 
 	public String getServiceVersion() {
 		return serviceVersion;

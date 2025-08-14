@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.bronzegiant.socialarchivr.SocialMediaPlatform;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,8 @@ public class ArchiveJob {
 
     private String username;
     private Long archiveId;
+    private SocialMediaPlatform platform;
+    
     private JobStatus status; // PENDING, IN_PROGRESS, COMPLETE, FAILED
     private String errorMessage;
 
@@ -25,9 +29,10 @@ public class ArchiveJob {
     
     public ArchiveJob() {}
     
-    public ArchiveJob(String username, Long archiveId) {
+    public ArchiveJob(Long archiveId, String username, SocialMediaPlatform platform) {
     	this.username = username;
     	this.archiveId = archiveId;
+    	this.platform = platform;
     	this.setStatus(JobStatus.PENDING);
     }
     
@@ -42,6 +47,10 @@ public class ArchiveJob {
 	
 	public Long getArchiveId() {
 		return archiveId;
+	}
+	
+	public SocialMediaPlatform getPlatform() {
+		return platform;
 	}
 	
 	public String getErrorMessage() {

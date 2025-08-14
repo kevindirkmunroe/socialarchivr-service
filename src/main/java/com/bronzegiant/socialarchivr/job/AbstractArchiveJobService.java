@@ -2,26 +2,30 @@ package com.bronzegiant.socialarchivr.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
-@Service
-public class ArchiveJobService {
+public abstract class AbstractArchiveJobService {
 
-    @Autowired private ArchiveJobRepository jobRepo;
+    @Autowired 
+    private ArchiveJobRepository jobRepo;
+    
+    protected abstract void preflight() throws Exception;
+    protected abstract void execute() throws Exception;
+    protected abstract void cleanup();
+    
+    protected AbstractArchiveJobService(ArchiveJobRepository jobRepo) {
+        this.jobRepo = jobRepo;
+    }
 
     @Async
     public void runArchiveJob(ArchiveJob job) {
+    	
         job.setStatus(JobStatus.IN_PROGRESS);
         jobRepo.save(job);
 
         try {
-            // 1. Call Facebook API
-            // 2. Store metadata in Postgres
-            // 3. Store documents in MongoDB
-            // 4. Upload media to S3
+        	preflight();
         	
-        	// For now, simulate a 1 second process.
-        	Thread.sleep(1000); 
+        	execute();
 
             job.setStatus(JobStatus.COMPLETE);
         } catch (Exception e) {
@@ -30,6 +34,7 @@ public class ArchiveJobService {
         }
 
         jobRepo.save(job);
+        cleanup();
     }
 }
 
