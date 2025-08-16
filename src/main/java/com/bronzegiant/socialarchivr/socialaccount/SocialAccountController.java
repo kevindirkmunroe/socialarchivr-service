@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.bronzegiant.socialarchivr.SocialMediaPlatform;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/social-accounts")
@@ -24,8 +26,10 @@ public class SocialAccountController {
     }
     
     @GetMapping("/{archiveId}/by-username")
-    public SocialAccount getAccountByUsername(@PathVariable Long archiveId, @RequestParam String username) {
-        return repository.findByArchiveIdAndUsername(archiveId, username);
+    public SocialAccount getAccountByUsername(@PathVariable Long archiveId, 
+    											@RequestParam String username,
+    											@RequestParam SocialMediaPlatform platform) {
+        return repository.findByArchiveIdAndUsernameAndPlatform(archiveId, username, platform);
     }
 
     @DeleteMapping("/{id}")

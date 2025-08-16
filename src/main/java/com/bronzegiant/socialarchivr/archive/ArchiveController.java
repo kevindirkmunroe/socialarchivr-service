@@ -8,12 +8,14 @@ import com.bronzegiant.socialarchivr.job.ArchiveJobRepository;
 import com.bronzegiant.socialarchivr.job.ArchiveJobRequest;
 import com.bronzegiant.socialarchivr.SocialMediaPlatform;
 import com.bronzegiant.socialarchivr.external.facebook.FacebookArchiveJobService;
+import com.bronzegiant.socialarchivr.external.facebook.FacebookClient;
 import com.bronzegiant.socialarchivr.job.AbstractArchiveJobService;
 import com.bronzegiant.socialarchivr.log.ArchiveLog;
 import com.bronzegiant.socialarchivr.log.ArchiveLogHistoryRepository;
 import com.bronzegiant.socialarchivr.log.ArchiveLogRepository;
 import com.bronzegiant.socialarchivr.post.Post;
 import com.bronzegiant.socialarchivr.post.PostRepository;
+import com.bronzegiant.socialarchivr.socialaccount.SocialAccountRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +35,8 @@ public class ArchiveController {
     private final ArchiveLogHistoryRepository archiveLogHistoryRepository;
     
     private final ArchiveJobRepository archiveJobRepository;
-    private final Map<SocialMediaPlatform, AbstractArchiveJobService> archiveJobServices;
+    private final Map<SocialMediaPlatform, AbstractArchiveJobService> archiveJobServices; 
+   
     
     private static final Logger LOGGER = Logger.getLogger(ArchiveController.class.getName());
 
@@ -41,7 +44,9 @@ public class ArchiveController {
     		ArchiveLogRepository archiveLogRepository,
     		PostRepository postRepository,
     		ArchiveLogHistoryRepository archiveLogHistoryRepository, 
-    		ArchiveJobRepository archiveJobRepository) {
+    		ArchiveJobRepository archiveJobRepository, 
+    		SocialAccountRepository socialAccountRepository,
+    		FacebookArchiveJobService facebookArchiveJobService) {
         this.archiveRepository = repository;
         this.archiveLogRepository = archiveLogRepository;
 		this.postRepository = postRepository;
@@ -49,7 +54,7 @@ public class ArchiveController {
         this.archiveJobRepository = archiveJobRepository;
         
         archiveJobServices = new HashMap<SocialMediaPlatform, AbstractArchiveJobService>();
-        archiveJobServices.put(SocialMediaPlatform.FACEBOOK, new FacebookArchiveJobService(archiveJobRepository));
+        archiveJobServices.put(SocialMediaPlatform.FACEBOOK, facebookArchiveJobService);
     }
 
     @GetMapping

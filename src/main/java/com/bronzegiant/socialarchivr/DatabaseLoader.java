@@ -35,6 +35,9 @@ public class DatabaseLoader {
 
 	private static final Logger log = LoggerFactory.getLogger(DatabaseLoader.class);
 	
+	private static String EXPIRED_FB_ACCESS_TOKEN = "EAAFgyyXiMxMBPHOalEDux6nYPh1Ln9oVKE7AjpAS6YxZBXSjyZBX18vIxrATkr5cbbP439OtCD2A2VhBZBYZBb46TrBIE4d23mouZCbz0lBwLNHMKXpr6Sj9P6YRfOxX88OOKa7z4uz8o7kdb4l6yxvoZCYZAELoz1rZCxn4NFPPSqZAHZCho1chYQmRzlXwbmHXTd6hrcxefGRXNBv4zZC32cJdoGfaPPz0UeG3QZDZD";
+	private static String EXPIRED_INSTAGRAM_ACCESS_TOKEN = "instagram1";
+	
 	@Bean
 	CommandLineRunner initDatabase(
 		UserRepository repository, 
@@ -115,9 +118,9 @@ public class DatabaseLoader {
 
 			// social_accounts
 		    List<SocialAccount> accountEntities = new ArrayList<SocialAccount>();
-		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive,  "kevindirk", "accessToken1", 10000L));
-		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive,  "kevinthecomedian", "accessToken2", 10000L));
-		    accountEntities.add(new SocialAccount(SocialMediaPlatform.INSTAGRAM, mainTestArchive,  "itskevinmunroe", "accessToken3", 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive,  "kevindirk", EXPIRED_FB_ACCESS_TOKEN, 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.FACEBOOK, mainTestArchive,  "kevinthecomedian", EXPIRED_FB_ACCESS_TOKEN, 10000L));
+		    accountEntities.add(new SocialAccount(SocialMediaPlatform.INSTAGRAM, mainTestArchive,  "itskevinmunroe", EXPIRED_INSTAGRAM_ACCESS_TOKEN, 10000L));
 		    
 			try {
 			    List<SocialAccount> savedSocialAccounts = saRepository.saveAll(accountEntities);

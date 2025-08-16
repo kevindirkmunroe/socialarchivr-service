@@ -1,14 +1,12 @@
 package com.bronzegiant.socialarchivr.job;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 public abstract class AbstractArchiveJobService {
 
-    @Autowired 
     private ArchiveJobRepository jobRepo;
     
-    protected abstract void preflight() throws Exception;
+    protected abstract void preflight(ArchiveJob job) throws Exception;
     protected abstract void execute() throws Exception;
     protected abstract void cleanup();
     
@@ -23,7 +21,7 @@ public abstract class AbstractArchiveJobService {
         jobRepo.save(job);
 
         try {
-        	preflight();
+        	preflight(job);
         	
         	execute();
 

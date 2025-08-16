@@ -17,8 +17,8 @@ public class ArchiveJob {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
     private Long archiveId;
+    private String username;
     private SocialMediaPlatform platform;
     
     private JobStatus status; // PENDING, IN_PROGRESS, COMPLETE, FAILED
@@ -30,8 +30,8 @@ public class ArchiveJob {
     public ArchiveJob() {}
     
     public ArchiveJob(Long archiveId, String username, SocialMediaPlatform platform) {
-    	this.username = username;
     	this.archiveId = archiveId;
+    	this.username = username;
     	this.platform = platform;
     	this.setStatus(JobStatus.PENDING);
     }

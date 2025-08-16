@@ -5,24 +5,21 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import java.util.logging.Logger;
 
 @Service
-@ConfigurationProperties(prefix = "facebook.api")
 public class FacebookClient {
 	
-	private String serviceVersion ;
-	private String baseUrl;
-	private String appId;
-	private String appSecret;
+	private FacebookApiProperties props;
 
     private final WebClient webClient;
+    
+    private static final Logger LOGGER = Logger.getLogger(FacebookClient.class.getName());
 
-
-    public FacebookClient(WebClient.Builder webClientBuilder) {
+    public FacebookClient(WebClient.Builder webClientBuilder, FacebookApiProperties fbProps) {
+    	this.props = fbProps;
         this.webClient = webClientBuilder
-                .baseUrl(baseUrl + "/" + serviceVersion)
+                .baseUrl(props.getBaseUrl() + "/" + props.getServiceVersion())
                 .build();
     }
 
@@ -39,7 +36,11 @@ public class FacebookClient {
     }
     
     public boolean isFacebookTokenValid(String userAccessToken) {
-        String appAccessToken = appId + "|" + appSecret;
+        String appAccessToken = props.getAppId() + "|" + props.getAppSecret();
+        LOGGER.info("app serviceVersion= " + props.getServiceVersion());
+        LOGGER.info("app baseUrl= " + props.getBaseUrl());
+        LOGGER.info("app access token= " + appAccessToken);
+        LOGGER.info("USER access token= " + userAccessToken);
         String url = String.format(
             "https://graph.facebook.com/debug_token?input_token=%s&access_token=%s",
             userAccessToken, appAccessToken
@@ -49,24 +50,8 @@ public class FacebookClient {
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 
         Map<String, Object> data = (Map<String, Object>) response.get("data");
+        LOGGER.info("response data=" + data);
         return data != null && Boolean.TRUE.equals(data.get("is_valid"));
     }
-
-
-	public String getServiceVersion() {
-		return serviceVersion;
-	}
-
-	public void setServiceVersion(String serviceVersion) {
-		this.serviceVersion = serviceVersion;
-	}
-
-	public String getBaseUrl() {
-		return baseUrl;
-	}
-
-	public void setBaseUrl(String baseUrl) {
-		this.baseUrl = baseUrl;
-	}
     
 }
